@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router();
 
-const authController = require("../controllers/authentication.controllers")
+const authController = require("../controllers/account.controllers")
 
 router.get("/", (req, res) => {
     res.status(200).json({ message: "API is up!" })

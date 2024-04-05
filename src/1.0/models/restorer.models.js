@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const { Schema } = mongoose;
 
-const userModel = new Schema({
+const restorerModel = new Schema({
     type: {
         required: [true, "Type is a required field"],
         type: String,
@@ -28,23 +28,31 @@ const userModel = new Schema({
         required: [true, "Password is a required field"],
         type: String,
     },
-    address: {
-        required: [true, "Address is a required field"],
+    restaurantType: {
+        required: [true, "RestaurantType is a required field"],
         type: String,
     },
-    phone: {
-        required: [true, "Phone is a required field"],
+    restaurantName: {
+        required: [true, "RestaurantName is a required field"],
+        type: String,
+    },
+    restaurantAddress: {
+        required: [true, "RestaurantAddress is a required field"],
+        type: String,
+    },
+    restaurantPhone: {
+        required: [true, "RestaurantPhone is a required field"],
         type: String,
     },
     sponsorCode: {
         required: false,
         type: String,
     },
-    userSponsorCode: {
-        required: [true, "UserSponsorCode is a required field"],
+    restorerSponsorCode: {
+        required: [true, "RestorerSponsorCode is a required field"],
         type: String,
         unique: true,
     },
 })
 
-module.exports = mongoose.model("User", userModel)
+module.exports = mongoose.model("Restorer", restorerModel)

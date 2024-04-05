@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const { v4: uuidv4 } = require('uuid');
 
 const User = require('../models/user.models')
+const Restorer = require('../models/restorer.models')
 
 exports.createUsers = async (req, res) => {
     let response;
@@ -11,15 +13,38 @@ exports.createUsers = async (req, res) => {
         response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
             if (err == null) {
                 try {
-                    var newUser = new User({
-                        firstname: req.body.firstname,
-                        surname: req.body.surname,
-                        password: bcrypt.hashSync(req.body.password, 10),
-                        type: req.body.type,
-                        email: req.body.email,
-                        phone: req.body.phone,
-                        sponsorCode: req.body.sponsorCode
-                    })
+                    switch (req.body.type) {
+                        case "user":
+                            var newUser = new User({
+                                type: req.body.type,
+                                firstname: req.body.firstname,
+                                surname: req.body.surname,
+                                email: req.body.email,
+                                password: bcrypt.hashSync(req.body.password, 10),
+                                address: req.body.address,
+                                phone: req.body.phone,
+                                sponsorCode: req.body.sponsorCode,
+                                userSponsorCode: uuidv4(),
+                            })
+                            break;
+                        case "restorer":
+                            var newUser = new Restorer({
+                                type: req.body.type,
+                                firstname: req.body.firstname,
+                                surname: req.body.surname,
+                                email: req.body.email,
+                                password: bcrypt.hashSync(req.body.password, 10),
+                                restaurantType: req.body.restaurantType,
+                                restaurantName: req.body.restaurantName,
+                                restaurantAddress: req.body.restaurantAddress,
+                                restaurantPhone: req.body.restaurantPhone,
+                                sponsorCode: req.body.sponsorCode,
+                                restorerSponsorCode: uuidv4(),
+                            })
+                            break;
+                        default:
+                            return res.status(400).json({ message: "Unsupported user type!" });
+                    }
                     await newUser.save()
                     return res.status(200).json(newUser)
                 } catch (error) {
@@ -37,7 +62,7 @@ exports.createUsers = async (req, res) => {
                         return res.status(400).json({ message: error.message });
 
                     }
-                    return res.status(500).json({ message: "Something went wrong" });
+                    return res.status(500).json({ message: "Something went wrong!" });
                 }
             }
             return res.status(401).json({ err: err })
@@ -47,7 +72,7 @@ exports.createUsers = async (req, res) => {
     return response
 }
 
-exports.readUsers = async (req, res) => {
+exports.readAll = async (req, res) => {
     let response;
     if (req.headers["authorization"]) {
         token = req.headers["authorization"]
@@ -55,12 +80,66 @@ exports.readUsers = async (req, res) => {
         response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
             if (err == null) {
                 try {
-                    if (req.params.email) {
-                        const user = await User.find({ email: req.params.email })
-                        return res.status(200).json(user)
+                    if (req.params.id) {
+                        const users = await User.find({ _id: req.params.id })
+                        const restorers = await Restorer.find({ _id: req.params.id })
+                        const json = users.concat(restorers)
+                        return res.status(200).json(json)
                     }
                     const users = await User.find()
-                    return res.status(200).json(users)
+                    const restorers = await Restorer.find()
+                    const json = users.concat(restorers)
+                    return res.status(200).json(json)
+                }
+                catch (error) {
+                    console.log(error)
+                    return res.status(400).json({ message: error.message })
+                }
+            }
+            return res.status(401).json({ err: err })
+        })
+    }
+    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
+    return response
+}
+
+exports.readUser = async (req, res) => {
+    let response;
+    if (req.headers["authorization"]) {
+        token = req.headers["authorization"]
+        if (token.includes("Bearer")) token = token.substring(7)
+        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
+            if (err == null) {
+                try {
+                    if (req.params.id) {
+                        return res.status(200).json(await User.find({ _id: req.params.id }))
+                    }
+                    return res.status(200).json(await User.find())
+                }
+                catch (error) {
+                    console.log(error)
+                    return res.status(400).json({ message: error.message })
+                }
+            }
+            return res.status(401).json({ err: err })
+        })
+    }
+    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
+    return response
+}
+
+exports.readRestorer = async (req, res) => {
+    let response;
+    if (req.headers["authorization"]) {
+        token = req.headers["authorization"]
+        if (token.includes("Bearer")) token = token.substring(7)
+        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
+            if (err == null) {
+                try {
+                    if (req.params.id) {
+                        return res.status(200).json(await Restorer.find({ _id: req.params.id }))
+                    }
+                    return res.status(200).json(await Restorer.find())
                 }
                 catch (error) {
                     console.log(error)

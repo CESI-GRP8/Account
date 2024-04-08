@@ -129,569 +129,301 @@ exports.login = async (req, res) => {
     }
 }
 
-
-exports.readAll = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
+exports.authenticate = async (req, res) => {
+    try {
         token = req.headers["authorization"]
         if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
+        jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
             if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        if (req.params.id) {
-                            const users = await User.find({ _id: req.params.id })
-                            const restorers = await Restorer.find({ _id: req.params.id })
-                            const deliverers = await Deliverer.find({ _id: req.params.id })
-                            const developer = await Developer.find({ _id: req.params.id })
-                            const marketing = await Marketing.find({ _id: req.params.id })
-                            const administrators = await Administrator.find({ _id: req.params.id })
-                            const json = users.concat(restorers).concat(deliverers).concat(developer).concat(marketing).concat(administrators)
-                            return res.status(200).json(json)
-                        }
-                        const users = await User.find()
-                        const restorers = await Restorer.find()
-                        const deliverers = await Deliverer.find()
-                        const developer = await Developer.find()
-                        const marketing = await Marketing.find()
-                        const administrators = await Administrator.find()
-                        const json = users.concat(restorers).concat(deliverers).concat(developer).concat(marketing).concat(administrators)
-                        return res.status(200).json(json)
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
+                return res.status(200).json({ message: "User authenticate !" })
             }
             return res.status(401).json({ err: err })
         })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
+}
+
+
+exports.readAll = async (req, res) => {
+    try {
+        if (req.params.id) {
+            const users = await User.find({ _id: req.params.id })
+            const restorers = await Restorer.find({ _id: req.params.id })
+            const deliverers = await Deliverer.find({ _id: req.params.id })
+            const developer = await Developer.find({ _id: req.params.id })
+            const marketing = await Marketing.find({ _id: req.params.id })
+            const administrators = await Administrator.find({ _id: req.params.id })
+            const json = users.concat(restorers).concat(deliverers).concat(developer).concat(marketing).concat(administrators)
+            return res.status(200).json(json)
+        }
+        const users = await User.find()
+        const restorers = await Restorer.find()
+        const deliverers = await Deliverer.find()
+        const developer = await Developer.find()
+        const marketing = await Marketing.find()
+        const administrators = await Administrator.find()
+        const json = users.concat(restorers).concat(deliverers).concat(developer).concat(marketing).concat(administrators)
+        return res.status(200).json(json)
+    }
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.readUser = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        if (req.params.id) {
-                            return res.status(200).json(await User.find({ _id: req.params.id }))
-                        }
-                        return res.status(200).json(await User.find())
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        if (req.params.id) {
+            return res.status(200).json(await User.find({ _id: req.params.id }))
+        }
+        return res.status(200).json(await User.find())
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.readRestorer = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        if (req.params.id) {
-                            return res.status(200).json(await Restorer.find({ _id: req.params.id }))
-                        }
-                        return res.status(200).json(await Restorer.find())
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        if (req.params.id) {
+            return res.status(200).json(await Restorer.find({ _id: req.params.id }))
+        }
+        return res.status(200).json(await Restorer.find())
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.readDeliverer = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        if (req.params.id) {
-                            return res.status(200).json(await Deliverer.find({ _id: req.params.id }))
-                        }
-                        return res.status(200).json(await Deliverer.find())
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        if (req.params.id) {
+            return res.status(200).json(await Deliverer.find({ _id: req.params.id }))
+        }
+        return res.status(200).json(await Deliverer.find())
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.readDeveloper = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        if (req.params.id) {
-                            return res.status(200).json(await Developer.find({ _id: req.params.id }))
-                        }
-                        return res.status(200).json(await Developer.find())
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        if (req.params.id) {
+            return res.status(200).json(await Developer.find({ _id: req.params.id }))
+        }
+        return res.status(200).json(await Developer.find())
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.readMarketing = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        if (req.params.id) {
-                            return res.status(200).json(await Marketing.find({ _id: req.params.id }))
-                        }
-                        return res.status(200).json(await Marketing.find())
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        if (req.params.id) {
+            return res.status(200).json(await Marketing.find({ _id: req.params.id }))
+        }
+        return res.status(200).json(await Marketing.find())
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.readAdministrator = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        if (req.params.id) {
-                            return res.status(200).json(await Administrator.find({ _id: req.params.id }))
-                        }
-                        return res.status(200).json(await Administrator.find())
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        if (req.params.id) {
+            return res.status(200).json(await Administrator.find({ _id: req.params.id }))
+        }
+        return res.status(200).json(await Administrator.find())
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 
 exports.updateUser = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body)
-                        if (updatedUser != null) {
-                            return res.status(200).json({ message: `User ${req.params.id} updated!` })
-                        }
-                        return res.status(404).json({ message: `User ${req.params.id} not found!` })
+    try {
+        const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body)
+        if (updatedUser != null) {
+            return res.status(200).json({ message: `User ${req.params.id} updated!` })
+        }
+        return res.status(404).json({ message: `User ${req.params.id} not found!` })
 
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.updateRestorer = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const updatedRestorer = await Restorer.findOneAndUpdate({ _id: req.params.id }, req.body)
-                        if (updatedRestorer != null) {
-                            return res.status(200).json({ message: `Restorer ${req.params.id} updated!` })
-                        }
-                        return res.status(404).json({ message: `Restorer ${req.params.id} not found!` })
+    try {
+        const updatedRestorer = await Restorer.findOneAndUpdate({ _id: req.params.id }, req.body)
+        if (updatedRestorer != null) {
+            return res.status(200).json({ message: `Restorer ${req.params.id} updated!` })
+        }
+        return res.status(404).json({ message: `Restorer ${req.params.id} not found!` })
 
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.updateDeliverer = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const updatedDeliverer = await Deliverer.findOneAndUpdate({ _id: req.params.id }, req.body)
-                        if (updatedDeliverer != null) {
-                            return res.status(200).json({ message: `Deliverer ${req.params.id} updated!` })
-                        }
-                        return res.status(404).json({ message: `Deliverer ${req.params.id} not found!` })
+    try {
+        const updatedDeliverer = await Deliverer.findOneAndUpdate({ _id: req.params.id }, req.body)
+        if (updatedDeliverer != null) {
+            return res.status(200).json({ message: `Deliverer ${req.params.id} updated!` })
+        }
+        return res.status(404).json({ message: `Deliverer ${req.params.id} not found!` })
 
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.updateDeveloper = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const updatedDeveloper = await Developer.findOneAndUpdate({ _id: req.params.id }, req.body)
-                        if (updatedDeveloper != null) {
-                            return res.status(200).json({ message: `Developer ${req.params.id} updated!` })
-                        }
-                        return res.status(404).json({ message: `Developer ${req.params.id} not found!` })
+    try {
+        const updatedDeveloper = await Developer.findOneAndUpdate({ _id: req.params.id }, req.body)
+        if (updatedDeveloper != null) {
+            return res.status(200).json({ message: `Developer ${req.params.id} updated!` })
+        }
+        return res.status(404).json({ message: `Developer ${req.params.id} not found!` })
 
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.updateMarketing = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const updatedMarketing = await Marketing.findOneAndUpdate({ _id: req.params.id }, req.body)
-                        if (updatedMarketing != null) {
-                            return res.status(200).json({ message: `Marketing ${req.params.id} updated!` })
-                        }
-                        return res.status(404).json({ message: `Marketing ${req.params.id} not found!` })
+    try {
+        const updatedMarketing = await Marketing.findOneAndUpdate({ _id: req.params.id }, req.body)
+        if (updatedMarketing != null) {
+            return res.status(200).json({ message: `Marketing ${req.params.id} updated!` })
+        }
+        return res.status(404).json({ message: `Marketing ${req.params.id} not found!` })
 
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.updateAdministrator = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const updatedAdministrator = await Administrator.findOneAndUpdate({ _id: req.params.id }, req.body)
-                        if (updatedAdministrator != null) {
-                            return res.status(200).json({ message: `Administrator ${req.params.id} updated!` })
-                        }
-                        return res.status(404).json({ message: `Administrator ${req.params.id} not found!` })
+    try {
+        const updatedAdministrator = await Administrator.findOneAndUpdate({ _id: req.params.id }, req.body)
+        if (updatedAdministrator != null) {
+            return res.status(200).json({ message: `Administrator ${req.params.id} updated!` })
+        }
+        return res.status(404).json({ message: `Administrator ${req.params.id} not found!` })
 
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 
 exports.deleteUser = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const deletedUser = await User.deleteOne({ _id: req.params.id })
-                        if (deletedUser.deletedCount != 0) {
-                            return res.status(200).json({ message: `User ${req.params.id} deleted!` })
-                        }
-                        return res.status(404).json({ message: `User ${req.params.id} not found!` })
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        const deletedUser = await User.deleteOne({ _id: req.params.id })
+        if (deletedUser.deletedCount != 0) {
+            return res.status(200).json({ message: `User ${req.params.id} deleted!` })
+        }
+        return res.status(404).json({ message: `User ${req.params.id} not found!` })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.deleteRestorer = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const deletedRestorer = await Restorer.deleteOne({ _id: req.params.id })
-                        if (deletedRestorer.deletedCount != 0) {
-                            return res.status(200).json({ message: `Restorer ${req.params.id} deleted!` })
-                        }
-                        return res.status(404).json({ message: `Restorer ${req.params.id} not found!` })
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        const deletedRestorer = await Restorer.deleteOne({ _id: req.params.id })
+        if (deletedRestorer.deletedCount != 0) {
+            return res.status(200).json({ message: `Restorer ${req.params.id} deleted!` })
+        }
+        return res.status(404).json({ message: `Restorer ${req.params.id} not found!` })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.deleteDeliverer = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const deletedDeliverer = await Deliverer.deleteOne({ _id: req.params.id })
-                        if (deletedDeliverer.deletedCount != 0) {
-                            return res.status(200).json({ message: `Deliverer ${req.params.id} deleted!` })
-                        }
-                        return res.status(404).json({ message: `Deliverer ${req.params.id} not found!` })
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        const deletedDeliverer = await Deliverer.deleteOne({ _id: req.params.id })
+        if (deletedDeliverer.deletedCount != 0) {
+            return res.status(200).json({ message: `Deliverer ${req.params.id} deleted!` })
+        }
+        return res.status(404).json({ message: `Deliverer ${req.params.id} not found!` })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.deleteDevloper = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const deletedDevloper = await Devloper.deleteOne({ _id: req.params.id })
-                        if (deletedDevloper.deletedCount != 0) {
-                            return res.status(200).json({ message: `Devloper ${req.params.id} deleted!` })
-                        }
-                        return res.status(404).json({ message: `Devloper ${req.params.id} not found!` })
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        const deletedDevloper = await Devloper.deleteOne({ _id: req.params.id })
+        if (deletedDevloper.deletedCount != 0) {
+            return res.status(200).json({ message: `Devloper ${req.params.id} deleted!` })
+        }
+        return res.status(404).json({ message: `Devloper ${req.params.id} not found!` })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.deleteMarketing = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const deletedMarketing = await Marketing.deleteOne({ _id: req.params.id })
-                        if (deletedMarketing.deletedCount != 0) {
-                            return res.status(200).json({ message: `Marketing ${req.params.id} deleted!` })
-                        }
-                        return res.status(404).json({ message: `Marketing ${req.params.id} not found!` })
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        const deletedMarketing = await Marketing.deleteOne({ _id: req.params.id })
+        if (deletedMarketing.deletedCount != 0) {
+            return res.status(200).json({ message: `Marketing ${req.params.id} deleted!` })
+        }
+        return res.status(404).json({ message: `Marketing ${req.params.id} not found!` })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }
 
 exports.deleteAdministrator = async (req, res) => {
-    let response;
-    if (req.headers["authorization"]) {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        response = jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                if (decoded.type == "administrator") {
-                    try {
-                        const deletedAdministrator = await Administrator.deleteOne({ _id: req.params.id })
-                        if (deletedAdministrator.deletedCount != 0) {
-                            return res.status(200).json({ message: `Administrator ${req.params.id} deleted!` })
-                        }
-                        return res.status(404).json({ message: `Administrator ${req.params.id} not found!` })
-                    }
-                    catch (error) {
-                        console.log(error)
-                        return res.status(400).json({ message: error.message })
-                    }
-                }
-                return res.status(401).json({ message: "Unauthorized user!" })
-            }
-            return res.status(401).json({ err: err })
-        })
+    try {
+        const deletedAdministrator = await Administrator.deleteOne({ _id: req.params.id })
+        if (deletedAdministrator.deletedCount != 0) {
+            return res.status(200).json({ message: `Administrator ${req.params.id} deleted!` })
+        }
+        return res.status(404).json({ message: `Administrator ${req.params.id} not found!` })
     }
-    else response = res.status(401).json({ message: "Bearer authentication must be set!" })
-    return response
+    catch (error) {
+        console.log(error)
+        return res.status(400).json({ message: error.message })
+    }
 }

@@ -3,12 +3,13 @@ const router = express.Router();
 
 const authController = require("../controllers/account.controllers")
 
-router.get("/", (req, res) => {
+router.get("/check", (req, res) => {
     res.status(200).json({ message: "API is up!" })
 })
 
 router.post("/register", authController.register)
 router.post("/login", authController.login)
+router.get("/authenticate", authController.authenticate)
 
 router.get("/all", authController.readAll)
 router.get("/all/:id", authController.readAll)

@@ -149,13 +149,13 @@ exports.authenticate = async (req, res) => {
 
 exports.readAll = async (req, res) => {
     try {
-        if (req.params.id) {
-            const users = await User.find({ _id: req.params.id })
-            const restorers = await Restorer.find({ _id: req.params.id })
-            const deliverers = await Deliverer.find({ _id: req.params.id })
-            const developer = await Developer.find({ _id: req.params.id })
-            const marketing = await Marketing.find({ _id: req.params.id })
-            const administrators = await Administrator.find({ _id: req.params.id })
+        if (req.params.email) {
+            const users = await User.find({ email: req.params.email })
+            const restorers = await Restorer.find({ email: req.params.email })
+            const deliverers = await Deliverer.find({ email: req.params.email })
+            const developer = await Developer.find({ email: req.params.email })
+            const marketing = await Marketing.find({ email: req.params.email })
+            const administrators = await Administrator.find({ email: req.params.email })
             const json = users.concat(restorers).concat(deliverers).concat(developer).concat(marketing).concat(administrators)
             return res.status(200).json(json)
         }

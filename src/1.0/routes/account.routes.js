@@ -12,7 +12,7 @@ router.post("/login", authController.login)
 router.get("/authenticate", authController.authenticate)
 
 router.get("/all", authController.readAll)
-router.get("/all/:email", authController.readAll)
+router.get("/all/:id", authController.readAll)
 router.get("/users", authController.readUser)
 router.get("/users/:id", authController.readUser)
 router.get("/restorers/", authController.readRestorer)

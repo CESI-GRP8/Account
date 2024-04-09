@@ -117,7 +117,7 @@ exports.login = async (req, res) => {
         const existingUser = user.concat(restorer).concat(deliverer).concat(developer).concat(marketing).concat(administrator)
         if (existingUser) {
             if (bcrypt.compareSync(req.body.password, existingUser[0].password)) {
-                const accessToken = jwt.sign({ type: existingUser[0].type, exp: Math.floor(Date.now() / 1000) + 120 }, process.env.ACCESS_JWT_KEY);
+                const accessToken = jwt.sign({ type: existingUser[0]._id, exp: Math.floor(Date.now() / 1000) + 120 }, process.env.ACCESS_JWT_KEY);
                 return res.status(200).json({ message: "You are now connected!", token: accessToken })
             }
         }
@@ -149,13 +149,13 @@ exports.authenticate = async (req, res) => {
 
 exports.readAll = async (req, res) => {
     try {
-        if (req.params.email) {
-            const users = await User.find({ email: req.params.email })
-            const restorers = await Restorer.find({ email: req.params.email })
-            const deliverers = await Deliverer.find({ email: req.params.email })
-            const developer = await Developer.find({ email: req.params.email })
-            const marketing = await Marketing.find({ email: req.params.email })
-            const administrators = await Administrator.find({ email: req.params.email })
+        if (req.params.id) {
+            const users = await User.find({ _id: req.params.id })
+            const restorers = await Restorer.find({ _id: req.params.id })
+            const deliverers = await Deliverer.find({ _id: req.params.id })
+            const developer = await Developer.find({ _id: req.params.id })
+            const marketing = await Marketing.find({ _id: req.params.id })
+            const administrators = await Administrator.find({ _id: req.params.id })
             const json = users.concat(restorers).concat(deliverers).concat(developer).concat(marketing).concat(administrators)
             return res.status(200).json(json)
         }

@@ -1,15 +1,17 @@
-require("dotenv").config();
-const dbClient = require("./src/config/database");
-const express = require("express");
-const cors = require("cors");
+require("dotenv").config()
+const dbClient = require("./src/config/database")
+const express = require("express")
+const cors = require("cors")
+
 
 dbClient();
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 
 // Middleware pour gérer les requêtes OPTIONS
 app.options("/1.0/accounts/register", (req, res) => {

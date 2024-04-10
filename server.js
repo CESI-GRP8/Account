@@ -1,11 +1,13 @@
 require("dotenv").config()
 const dbClient = require("./src/config/database")
 const express = require("express")
+const cors = require("cors")
 
 dbClient()
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

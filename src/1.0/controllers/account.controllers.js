@@ -117,8 +117,8 @@ exports.login = async (req, res) => {
         const existingUser = user.concat(restorer).concat(deliverer).concat(developer).concat(marketing).concat(administrator)
         if (existingUser) {
             if (bcrypt.compareSync(req.body.password, existingUser[0].password)) {
-                const accessToken = jwt.sign({ type: existingUser[0]._id, exp: Math.floor(Date.now() / 1000) + 120 }, process.env.ACCESS_JWT_KEY);
-                return res.status(200).json({ message: "You are now connected!", token: accessToken })
+                const accessToken = jwt.sign({ type: existingUser[0]._id, exp: Math.floor(Date.now() / 1000) + 86400 }, process.env.ACCESS_JWT_KEY);
+                return res.status(200).json({ message: "You are now connected!", id: existingUser[0]._id, token: accessToken })
             }
         }
         return res.status(401).json({ message: "Invalid credentials!" })

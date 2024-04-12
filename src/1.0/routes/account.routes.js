@@ -137,7 +137,7 @@ const authController = require("../controllers/account.controllers")
  *              delivererSponsorCode:
  *                  type: string
  *                  description: Generated deliverer sponsor code of the deliverer
- *      marketing:
+ *      Marketing:
  *          type: object
  *          required:
  *              - type
@@ -168,7 +168,7 @@ const authController = require("../controllers/account.controllers")
  *              phone:
  *                  type: string
  *                  description: Phone of the marketing
- *      administrator:
+ *      Administrator:
  *          type: object
  *          required:
  *              - type
@@ -242,7 +242,7 @@ const authController = require("../controllers/account.controllers")
  *              description: API is working
  */
 router.get("/check", (req, res) => {
-    res.status(200).json({ message: "API is up!" })
+  res.status(200).json({ message: "API is up!" })
 })
 
 router.get("/authenticate", authController.authenticate)

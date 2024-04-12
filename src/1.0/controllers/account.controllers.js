@@ -131,14 +131,19 @@ exports.login = async (req, res) => {
 
 exports.authenticate = async (req, res) => {
     try {
-        token = req.headers["authorization"]
-        if (token.includes("Bearer")) token = token.substring(7)
-        jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
-            if (err == null) {
-                return res.status(200).json({ message: "User authenticate !" })
-            }
-            return res.status(401).json({ err: err })
-        })
+        if (req.headers["authorization"]) {
+            token = req.headers["authorization"]
+            if (token.includes("Bearer")) token = token.substring(7)
+            jwt.verify(token, process.env.ACCESS_JWT_KEY, async (err, decoded) => {
+                if (err == null) {
+                    return res.status(200).json({ message: "User authenticate !" })
+                }
+                return res.status(401).json({ err: err })
+            })
+        }
+        else {
+            return res.status(401).json({ message: "Authorization header is missing!" })
+        }
     }
     catch (error) {
         console.log(error)
